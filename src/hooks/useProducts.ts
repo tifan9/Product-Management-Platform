@@ -9,6 +9,11 @@ interface UseProductsReturn {
   loading: boolean;
   error: string | null;
   hasMore: boolean;
+  total: number;
+  page: number;
+  pageSize: number;
+  setPage: (page: number) => void;
+  setPageSize: (size: number) => void;
   searchProducts: (query: string) => Promise<void>;
   loadMoreProducts: () => Promise<void>;
   updateProduct: (id: number, productData: Partial<Product>) => Promise<Product | null>;
@@ -23,6 +28,9 @@ export const useProducts = (): UseProductsReturn => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const [currentSkip, setCurrentSkip] = useState(0);
   const [filters, setFilters] = useState<ProductFilters>({
     search: '',
@@ -41,11 +49,11 @@ export const useProducts = (): UseProductsReturn => {
       let response: ProductsResponse;
 
       if (debouncedSearch) {
-        response = await productService.searchProducts(debouncedSearch);
+        response = await productService.searchProducts(debouncedSearch, skip, pageSize);
       } else if (filters.category) {
-        response = await productService.getProductsByCategory(filters.category);
+        response = await productService.getProductsByCategory(filters.category, skip, pageSize);
       } else {
-        response = await productService.getProducts(skip, 20);
+        response = await productService.getProducts(skip, pageSize);
       }
 
       let filteredProducts = response.products;
@@ -59,13 +67,14 @@ export const useProducts = (): UseProductsReturn => {
 
       if (reset) {
         setProducts(filteredProducts);
-        setCurrentSkip(20);
+        setCurrentSkip(pageSize);
       } else {
         setProducts(prev => [...prev, ...filteredProducts]);
-        setCurrentSkip(prev => prev + 20);
+        setCurrentSkip(prev => prev + pageSize);
       }
 
-      setHasMore(response.products.length === 20 && !debouncedSearch);
+      setTotal(response.total ?? filteredProducts.length);
+      setHasMore(skip + filteredProducts.length < (response.total ?? filteredProducts.length));
     } catch (err) {
       setError('Failed to load products. Please try again.');
       console.error('Error loading products:', err);
@@ -84,12 +93,24 @@ export const useProducts = (): UseProductsReturn => {
   };
 
   useEffect(() => {
+    // When filters/search change, reset pagination to first page
+    setPage(1);
     loadProducts(0, true);
-  }, [debouncedSearch, filters.category, filters.minPrice, filters.maxPrice]);
+  }, [debouncedSearch, filters.category, filters.minPrice, filters.maxPrice, pageSize]);
 
   useEffect(() => {
     loadCategories();
   }, []);
+
+  // Navigate to a specific page
+  const handleSetPage = (nextPage: number) => {
+    if (nextPage < 1) return;
+    setPage(nextPage);
+    const nextSkip = (nextPage - 1) * pageSize;
+    setCurrentSkip(nextSkip);
+    // Replace list with the requested page
+    loadProducts(nextSkip, true);
+  };
 
   const searchProducts = async (query: string) => {
     setFilters(prev => ({ ...prev, search: query }));
@@ -137,6 +158,7 @@ export const useProducts = (): UseProductsReturn => {
 
   const refreshProducts = async () => {
     setCurrentSkip(0);
+    setPage(1);
     await loadProducts(0, true);
   };
 
@@ -146,6 +168,11 @@ export const useProducts = (): UseProductsReturn => {
     loading,
     error,
     hasMore,
+    total,
+    page,
+    pageSize,
+    setPage: handleSetPage,
+    setPageSize,
     searchProducts,
     loadMoreProducts,
     updateProduct,

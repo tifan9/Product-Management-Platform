@@ -28,7 +28,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product, view = 'grid' }
             <img
               src={product.thumbnail}
               alt={product.title}
-              className="w-32 h-32 object-cover rounded-lg"
+              className="w-40 h-40 object-cover rounded-lg"
               loading="lazy"
             />
           </div>
@@ -72,7 +72,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product, view = 'grid' }
               <span className="text-sm text-gray-500">
                 Stock: {product.stock}
               </span>
-              <div className="flex gap-2">
+              <div className="flex gap-3 ">
                 <Link
                   to={`/products/${product.id}`}
                   className="flex items-center gap-1 px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
@@ -97,12 +97,12 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product, view = 'grid' }
   }
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow group">
+    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow group flex flex-col h-full ">
       <Link to={`/products/${product.id}`} className="block relative">
         <img
           src={product.thumbnail}
           alt={product.title}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300"
           loading="lazy"
         />
         {product.discountPercentage > 0 && (
@@ -112,7 +112,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product, view = 'grid' }
         )}
       </Link>
 
-      <div className="p-4">
+      <div className="p-5 flex flex-col h-full">
         <div className="flex items-start justify-between mb-2">
           <div>
             <Link
@@ -144,13 +144,23 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product, view = 'grid' }
               ${discountedPrice.toFixed(2)}
             </span>
           </div>
-          <span className="text-sm text-gray-500">Stock: {product.stock}</span>
+          <span className={`items-center px-2.5 py-0.5 rounded-full text-xs  text-gray-500 ${
+                          product.stock > 10
+                            ? 'bg-green-100 text-green-800'
+                            : product.stock > 0
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-red-100 text-red-800'
+                        }`}>
+                          Stock: 
+                          {product.stock}
+                        </span>
+          
         </div>
 
         <button
           onClick={handleAddToCart}
           disabled={product.stock === 0}
-          className="w-full flex items-center justify-center gap-2 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-medium"
+          className="mt-auto w-full flex items-center justify-center gap-2 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-medium"
         >
           <ShoppingCart className="w-4 h-4" />
           {quantity > 0 ? `In Cart (${quantity})` : 'Add to Cart'}

@@ -48,7 +48,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
           onClick={onClose}
         />
       )}
@@ -56,7 +56,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       {/* Sidebar */}
       <div className={`
         fixed lg:static top-0 right-0 h-full bg-white border-l lg:border-l-0 lg:border-r border-gray-200 
-        w-80 lg:w-64 z-50 transform transition-transform duration-300 ease-in-out
+        w-80 lg:w-64 z-40 transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
       `}>
         <div className="p-6">

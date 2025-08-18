@@ -26,7 +26,7 @@ const CartPage: React.FC = () => {
             Looks like you haven't added any products to your cart yet.
           </p>
           <Link
-            to="/products"
+            to="/"
             className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
           >
             <ShoppingBag className="w-5 h-5" />

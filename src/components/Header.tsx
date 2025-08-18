@@ -11,7 +11,7 @@ const Header: React.FC = () => {
 
   const navItems = [
     // { path: '/', icon: Home, label: 'Home' },
-    { path: '/products', icon: Package, label: 'Products' },
+    { path: '/', icon: Package, label: 'Products' },
     { path: '/admin', icon: Settings, label: 'Admin' },
   ];
 
@@ -21,7 +21,7 @@ const Header: React.FC = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <Globe className="w-8 h-8 text-blue-600" />
+            {/* <Globe className="w-8 h-8 text-blue-600" /> */}
             <span className="text-xl font-bold text-gray-900">Product Platform</span>
           </Link>
 

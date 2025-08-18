@@ -25,8 +25,8 @@ export const productService = {
   },
 
   // Search products
-  searchProducts: async (query: string): Promise<ProductsResponse> => {
-    const response = await api.get(`/products/search?q=${encodeURIComponent(query)}`);
+  searchProducts: async (query: string, skip = 0, limit = 20): Promise<ProductsResponse> => {
+    const response = await api.get(`/products/search?q=${encodeURIComponent(query)}&skip=${skip}&limit=${limit}`);
     return response.data;
   },
 
@@ -55,8 +55,8 @@ export const productService = {
   },
 
   // Get products by category
-  getProductsByCategory: async (category: string): Promise<ProductsResponse> => {
-    const response = await api.get(`/products/category/${category}`);
+  getProductsByCategory: async (category: string, skip = 0, limit = 20): Promise<ProductsResponse> => {
+    const response = await api.get(`/products/category/${category}?skip=${skip}&limit=${limit}`);
     return response.data;
   },
 };
