@@ -1,8 +1,10 @@
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, ShoppingCart, Eye } from 'lucide-react';
+import { Star, ShoppingCart, Eye, AlertCircle } from 'lucide-react';
 import { Product } from '../types';
 import { useCart } from '../contexts/CartContext';
+import LoadingSpinner from './LoadingSpinner';
+import { useAuth } from '../contexts/AuthContext';
 
 interface ProductCardProps {
   product: Product;
@@ -10,12 +12,13 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = memo(({ product, view = 'grid' }) => {
-  const { addToCart, getItemQuantity } = useCart();
+  const { addToCart, getItemQuantity, loading, error } = useCart();
+  const { user } = useAuth();
   const quantity = getItemQuantity(product.id);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
-    addToCart(product, 1);
+    await addToCart(product, 1);
   };
 
   const discountedPrice = product.price * (1 - product.discountPercentage / 100);
@@ -80,13 +83,30 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product, view = 'grid' }
                   <Eye className="w-4 h-4" />
                   View
                 </Link>
+                {error && (
+                  <div className="flex items-center gap-1 text-xs text-red-600 bg-red-50 px-2 py-1 rounded">
+                    <AlertCircle className="w-3 h-3" />
+                    {error}
+                  </div>
+                )}
                 <button
                   onClick={handleAddToCart}
                   disabled={product.stock === 0}
                   className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors text-sm font-medium"
                 >
-                  <ShoppingCart className="w-4 h-4" />
-                  {quantity > 0 ? `In Cart (${quantity})` : 'Add to Cart'}
+                  {loading ? (
+                    <LoadingSpinner size="sm" color="text-white" />
+                  ) : (
+                    <ShoppingCart className="w-4 h-4" />
+                  )}
+                  {loading 
+                    ? 'Adding...' 
+                    : !user 
+                      ? 'Sign In to Add' 
+                      : quantity > 0 
+                        ? `In Cart (${quantity})` 
+                        : 'Add to Cart'
+                  }
                 </button>
               </div>
             </div>
@@ -162,8 +182,19 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product, view = 'grid' }
           disabled={product.stock === 0}
           className="mt-auto w-full flex items-center justify-center gap-2 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-medium"
         >
-          <ShoppingCart className="w-4 h-4" />
-          {quantity > 0 ? `In Cart (${quantity})` : 'Add to Cart'}
+          {loading ? (
+            <LoadingSpinner size="sm" color="text-white" />
+          ) : (
+            <ShoppingCart className="w-4 h-4" />
+          )}
+          {loading 
+            ? 'Adding...' 
+            : !user 
+              ? 'Sign In to Add' 
+              : quantity > 0 
+                ? `In Cart (${quantity})` 
+                : 'Add to Cart'
+          }
         </button>
       </div>
     </div>

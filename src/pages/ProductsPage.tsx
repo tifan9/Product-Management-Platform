@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Filter } from 'lucide-react';
+import { Filter, Search } from 'lucide-react';
 import { useProducts } from '../hooks/useProducts';
 import { ProductFilters } from '../types';
 import ProductCard from '../components/ProductCard';
@@ -65,7 +65,7 @@ const ProductsPage: React.FC = () => {
           
           {/* Search and Controls */}
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-            <div className="w-full lg:w-96">
+            <div className="w-full lg:w-full">
               <SearchBar onSearch={handleSearch} />
             </div>
             
@@ -82,7 +82,7 @@ const ProductsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex gap-8">
+        <div className="flex gap-5">
           {/* Filters Sidebar */}
           <FilterSidebar
             categories={categories}
@@ -108,7 +108,10 @@ const ProductsPage: React.FC = () => {
               </div>
             ) : products.length === 0 ? (
               <div className="text-center py-12">
-                <div className="text-gray-400 text-6xl mb-4">🔍</div>
+                <div className="text-gray-400 text-6xl mb-4">
+                  {/* 🔍 */}
+                {/* <Search size={64} /> */}
+                </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
                 <p className="text-gray-600">Try adjusting your search or filter criteria</p>
               </div>

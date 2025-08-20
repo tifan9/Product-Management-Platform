@@ -124,7 +124,7 @@ const CartPage: React.FC = () => {
                 Clear Cart
               </button>
               <Link
-                to="/products"
+                to="/"
                 className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
               >
                 Continue Shopping
@@ -133,7 +133,7 @@ const CartPage: React.FC = () => {
           </div>
 
           {/* Order Summary */}
-          <div className="lg:col-span-1">
+          {/* <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-sm p-6 sticky top-8">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h3>
               
@@ -180,7 +180,7 @@ const CartPage: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

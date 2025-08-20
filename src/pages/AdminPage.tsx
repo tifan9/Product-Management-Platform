@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Plus, Edit2, Trash2, Search, Eye } from 'lucide-react';
 import { useProducts } from '../hooks/useProducts';
 import { Product } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ProductEditModal from '../components/ProductEditModal';
 import ConfirmationModal from '../components/ConfirmationModal';
+import SearchBar from '../components/SearchBar';
+import { Link } from 'react-router-dom';
 
 const AdminPage: React.FC = () => {
-  const { products, loading, error, updateProduct, deleteProduct, refreshProducts } = useProducts();
+  const { products, loading, error, updateProduct, deleteProduct, refreshProducts,searchProducts } = useProducts();
   const [searchTerm, setSearchTerm] = useState('');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
@@ -35,6 +37,9 @@ const AdminPage: React.FC = () => {
       }
     }
   };
+  const handleSearch = useCallback((query: string) => {
+    searchProducts(query);
+  }, [searchProducts]);
 
   const handleConfirmDelete = async () => {
     if (deletingProduct) {
@@ -72,30 +77,33 @@ const AdminPage: React.FC = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Product Management</h1>
+              <h1 className="text-3xl font-bold text-gray-900">Product Platform</h1>
               <p className="text-gray-600 mt-2">Manage your product catalog</p>
             </div>
-            <button
+            {/* <button
               onClick={() => setShowCreateModal(true)}
               className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
             >
               <Plus className="w-4 h-4" />
               Add Product
-            </button>
+            </button> */}
           </div>
         </div>
 
         {/* Search Bar */}
         <div className="mb-6">
           <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            {/* <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search products..."
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-            />
+            /> */}
+            <div className="w-full lg:w-full">
+              <SearchBar onSearch={handleSearch} />
+            </div>
           </div>
         </div>
 
@@ -179,12 +187,13 @@ const AdminPage: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center gap-2 justify-end">
-                          <button
-                            onClick={() => window.open(`/products/${product.id}`, '_blank')}
-                            className="text-gray-400 hover:text-gray-600 transition-colors"
+                          
+                          <Link
+                          to={`/products/${product.id}`}
+                          className="text-gray-400 hover:text-gray-600 transition-colors"
                           >
-                            <Eye className="w-4 h-4" />
-                          </button>
+                          <Eye className="w-4 h-4" />
+                          </Link>
                           <button
                             onClick={() => handleEdit(product)}
                             className="text-blue-600 hover:text-blue-900 transition-colors"

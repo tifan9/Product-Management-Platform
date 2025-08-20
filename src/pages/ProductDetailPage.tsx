@@ -6,9 +6,6 @@ import {
   ShoppingCart, 
   Heart, 
   Share2, 
-  Truck, 
-  Shield, 
-  RotateCcw,
   Plus,
   Minus
 } from 'lucide-react';
@@ -296,38 +293,31 @@ const ProductDetailPage: React.FC = () => {
               )}
             </div>
 
-            {/* Features */}
-            <div className="border-t border-gray-200 pt-6">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                    <Truck className="w-5 h-5 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">Free Shipping</p>
-                    <p className="text-xs text-gray-500">Orders over $50</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Shield className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">Warranty</p>
-                    <p className="text-xs text-gray-500">2 year warranty</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0 w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <RotateCcw className="w-5 h-5 text-purple-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">Returns</p>
-                    <p className="text-xs text-gray-500">30 day returns</p>
-                  </div>
+            {/* Customer Reviews */}
+            {product.reviews && product.reviews.length > 0 && (
+              <div className="border-t border-gray-200 pt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Customer Reviews</h3>
+                <div className="space-y-4">
+                  {product.reviews.map((rev, idx) => (
+                    <div key={idx} className="bg-white border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-4 h-4 ${i < rev.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-xs text-gray-500">{new Date(rev.date).toLocaleDateString()}</span>
+                      </div>
+                      <p className="text-gray-700 mb-2">{rev.comment}</p>
+                      <p className="text-xs text-gray-500">— {rev.reviewerName}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
